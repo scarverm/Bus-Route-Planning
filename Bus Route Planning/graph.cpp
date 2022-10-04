@@ -22,11 +22,12 @@ Graph::Graph(string start, string end, Mode mode){
 	this->mode = mode;
 }
 
-void Graph::InitGraph(){
+void Graph::InitGraph() {
 	cout << "===============初始化图中===============" << endl;
 	//读取busroute.txt文件
 	ifstream file;
 	char buf[50];
+	map<string, VNode> m;
 	file.open("busroute.txt", ios::in);
 	if (!file.is_open()) {
 		cout << "文件打开失败!" << endl;
@@ -34,7 +35,6 @@ void Graph::InitGraph(){
 	}
 	ArcNode station;			//保存路线编号和存储上一站点
 	VNode head;
-	int headIndex = -1;			//当前头结点下标
 	bool isStartStation = true;	//判断当前是否是起点站，起点站没有上一站点。因为是双向的，所以上一站点也应放在边结点集中
 	bool setRoute = false;
 	while (file >> buf) {	//将路线转换为邻接表存储的图
@@ -50,11 +50,10 @@ void Graph::InitGraph(){
 		head.stationName = "";
 		head.stationName += buf;	//头结点需要一个站点名和一个空的边结点集
 		head.ArcList.clear();
-		if (auto fi = find(headlist.begin(), headlist.end(), head) == headlist.end()) {
-			headlist.push_back(head);
-			headIndex++;
+		if (m.find(head.stationName) == m.end()) {
+			m[head.stationName] = head;
 		}
-
+		
 		//设置route
 		route[head.stationName].push_back(station.busNo);
 		sta[station.busNo].push_back(head.stationName);
@@ -63,28 +62,22 @@ void Graph::InitGraph(){
 		if (isStartStation) {
 			station.stationName = "";	//起点站没有上一站，直接改为当前站点
 			station.stationName += buf;
+			isStartStation = false;
 		}
 		else {
-			// 将当前结点设置为头结点
-			// 如果是中间站点，就先将上一站点加入本头结点的边结点集中
-			// 同时将本节点加入上一头结点的边结点集
-			auto fi = find(headlist.begin(), headlist.end(), head);
-			if (fi == headlist.end()) {
-				//如果是不重复的站点，则直接设置为新的头结点
-				headlist[headIndex].ArcList.push_back(station);	//未对station进行修改，保存的是上一站点
-			}
-			else {
-				//如果是重复的站点，则在原有的头结点处添加新的边结点
-				fi->ArcList.push_back(station);
-			}
-			//上一个结点不能用headIndex-1访问，因为可能不是当前结点的上一结点，而是headlist中的上一结点
-			head.stationName = station.stationName;
-			fi = find(headlist.begin(), headlist.end(), head);
+			//如果不是起点站，则将当前结点存为上一结点的边结点，同时将上一结点存为本节点的边结点
+			m[head.stationName].ArcList.push_back(station);
+			ArcNode tmp;
+			tmp.stationName = head.stationName;
+			tmp.busNo = station.busNo;
+			m[station.stationName].ArcList.push_back(tmp);
+
 			station.stationName = "";		//station改为当前站点
 			station.stationName += buf;
-			fi->ArcList.push_back(station);
 		}
-		isStartStation = false;
+	}
+	for (auto it = m.begin(); it != m.end(); it++) {
+		headlist.push_back(it->second);
 	}
 }
 
