@@ -1,0 +1,51 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "PREfast Code Analysis",
+          "version": "14.32.31329.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///d:/software/c&c++/visual studio/project/bus route planning/bus route planning/graph.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "sha-256": "d9d7f4c56ecbdccf1525ad3e00bd2e1c9e52b0f81838a5ad60a46ab660ff12ad"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/software/c&c++/visual studio/project/bus route planning/bus route planning/graph.hpp"
+          },
+          "hashes": {
+            "sha-256": "954593e64524acdd5f2196c553871c58a446d666999f1c6f356a658b97c71745"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/software/c&c++/visual studio/project/bus route planning/bus route planning/mode.hpp"
+          },
+          "hashes": {
+            "sha-256": "31c6059918c49835132817a8b8ae1567d7c3b4eaaecfe5af6a405dfabeb8b9c1"
+          }
+        }
+      ]
+    }
+  ]
+}
